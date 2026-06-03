@@ -1,9 +1,10 @@
 name: Release
 
 on:
-  push:
-    tags:
-      - 'v*'
+  workflow_run:
+    workflows: ['Go CI'] # 👈 MUST exactly match the `name:` at the top of your CI workflow file
+    types:
+      - completed
 
 # Required permissions to create a GitHub Release
 permissions:
@@ -11,12 +12,18 @@ permissions:
 
 jobs:
   release:
+    if: >-
+      ${{ 
+        github.event.workflow_run.conclusion == 'success' && 
+        startsWith(github.event.workflow_run.head_branch, 'v') 
+      }}
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v6
         with:
           fetch-depth: 0
+          ref: ${{ github.event.workflow_run.head_sha }}
 
       - name: Extract changelog section
         id: changelog
