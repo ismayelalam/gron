@@ -27,12 +27,9 @@ jobs:
 
       - name: Extract changelog section
         id: changelog
+        env:
+          VERSION: ${{ github.event.workflow_run.head_branch }} # e.g., v1.0.2
         run: |
-          VERSION=${GITHUB_REF#refs/tags/}
-
-          # ✅ FIX: Use awk to cleanly extract the body of the changelog.
-          # It starts printing after it sees "## [VERSION]" and stops when it sees the next "## [".
-          # This completely avoids the "head -n -1" bug that deletes the last line of the file.
           awk "/^## \[${VERSION}\]/{flag=1; next} /^## \[/{flag=0} flag" CHANGELOG.md > release-notes.md
 
           # Fallback if the changelog entry is missing or empty
@@ -40,13 +37,12 @@ jobs:
             echo "Release ${VERSION}" > release-notes.md
           fi
 
-          # ✅ FIX: Use the modern, safe block syntax for multiline outputs
+          # Safe multiline output
           {
             echo "notes<<EOF"
             cat release-notes.md
             echo "EOF"
           } >> "$GITHUB_OUTPUT"
-
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v3
         with:
