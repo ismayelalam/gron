@@ -69,7 +69,7 @@ func TestScheduler_ConcurrencyForbid(t *testing.T) {
 
 	s, _ := NewScheduler(SchedulerConfig{CheckInterval: 5 * time.Millisecond})
 
-	s.NewJob(func(ctx context.Context) (any, error) {
+	_, err := s.NewJob(func(ctx context.Context) (any, error) {
 		runs.Add(1)
 		cur := currentConcurrent.Add(1)
 
@@ -85,8 +85,13 @@ func TestScheduler_ConcurrencyForbid(t *testing.T) {
 		currentConcurrent.Add(-1)
 		return nil, nil
 	}, JobConfig{Name: "forbid", Schedule: "@every 10ms", Concurrency: ConcurrencyForbid})
+	if err != nil {
+		t.Fatal(err)
+	}
 
-	s.Start()
+	if err := s.Start(); err != nil {
+		t.Error(err)
+	}
 	time.Sleep(250 * time.Millisecond) // Let it run a few cycles
 	s.Stop()
 
@@ -108,7 +113,7 @@ func TestScheduler_ConcurrencyReplace(t *testing.T) {
 
 	s, _ := NewScheduler(SchedulerConfig{CheckInterval: 5 * time.Millisecond})
 
-	s.NewJob(func(ctx context.Context) (any, error) {
+	_, err := s.NewJob(func(ctx context.Context) (any, error) {
 		n := runNum.Add(1)
 		if n == 1 {
 			// First run blocks until cancelled
@@ -120,8 +125,13 @@ func TestScheduler_ConcurrencyReplace(t *testing.T) {
 		secondFinished.Store(true)
 		return nil, nil
 	}, JobConfig{Name: "replace", Schedule: "@every 20ms", Concurrency: ConcurrencyReplace})
+	if err != nil {
+		t.Fatal(err)
+	}
 
-	s.Start()
+	if err := s.Start(); err != nil {
+		t.Error(err)
+	}
 	// t=0: Run 1 starts and blocks.
 	// t=20: Run 2 triggers. Scheduler cancels Run 1, starts Run 2.
 	// Run 2 finishes immediately.
