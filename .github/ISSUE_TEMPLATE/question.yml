@@ -1,0 +1,27 @@
+name: ❓ Question / Support
+description: Ask a question about using gron
+title: '[Question]: '
+labels: ['question']
+body:
+  - type: textarea
+    id: question
+    attributes:
+      label: Your Question
+      description: What do you need help with?
+    validations:
+      required: true
+  - type: textarea
+    id: context
+    attributes:
+      label: Code & Context
+      description: Share relevant code snippets, config, or error messages.
+      render: go
+  - type: input
+    id: version
+    attributes:
+      label: gron Version
+      placeholder: e.g., v1.0.0 or latest commit
+  - type: markdown
+    attributes:
+      value: |
+        💡 Tip: Check the [README](https://github.com/ismayelalam/gron#readme) and [GoDoc](https://pkg.go.dev/github.com/ismayelalam/gron) first!
