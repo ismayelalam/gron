@@ -46,6 +46,8 @@ jobs:
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v3
         with:
+          tag_name: ${{ github.event.workflow_run.head_branch }}
+          name: Release ${{ github.event.workflow_run.head_branch }}
           body: ${{ steps.changelog.outputs.notes }}
           generate_release_notes: false
           make_latest: true
