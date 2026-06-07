@@ -62,7 +62,7 @@
 //   - n-m : ranges (e.g., 9-17 = 9am to 5pm)
 //   - n,m : lists (e.g., 0,30 = minute 0 and 30)
 //
-// Descriptors: @yearly, @annually, @monthly, @weekly, @daily, @midnight, @hourly, @every <duration>
+// Descriptors: @yearly, @semiannual, @quarterly, @monthly, @weekly, @daily, @hourly, @every <duration>
 //
 // # Configuration
 //

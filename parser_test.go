@@ -69,8 +69,13 @@ func TestCronParser_Next(t *testing.T) {
 func TestCronParser_Descriptors(t *testing.T) {
 	// Cleaned up: just verify all standard descriptors parse without error
 	descriptorsToTest := []string{
-		"@yearly", "@annually", "@monthly", "@weekly",
-		"@daily", "@midnight", "@hourly",
+		"@yearly",
+		"@semiannual",
+		"@quarterly",
+		"@monthly",
+		"@weekly",
+		"@daily",
+		"@hourly",
 	}
 
 	for _, expr := range descriptorsToTest {
